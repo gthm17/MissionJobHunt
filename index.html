@@ -1,23 +1,1592 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GTHM — Dev Roadmap 2026</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
-  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #0a0a0f; color: #e8e8e8; font-family: 'Syne', sans-serif; min-height: 100vh; }
-    #root { min-height: 100vh; }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>GL17CH — Dev Roadmap 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0f;--surface:#161b22;--surface2:#0d1117;
+  --border:#21262d;--muted:#484f58;--sub:#8b949e;
+  --text:#e6edf3;--text2:#c9d1d9;
+  --green:#00ff88;--blue:#00cfff;--orange:#ff6b35;
+  --purple:#c77dff;--yellow:#ffd60a;
+}
+body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh}
+button{font-family:'Syne',sans-serif;cursor:pointer}
+input,textarea{font-family:'Space Mono',monospace}
+a{text-decoration:none}
+
+/* TOPBAR */
+#topbar{
+  background:var(--surface2);border-bottom:1px solid var(--border);
+  padding:0 24px;display:flex;align-items:center;justify-content:space-between;
+  height:56px;position:sticky;top:0;z-index:100;
+}
+.logo{color:var(--green);font-family:'Space Mono',monospace;font-weight:700;font-size:15px}
+.logo-sub{color:var(--muted);font-family:'Space Mono',monospace;font-size:13px;margin-left:8px}
+.nav-tabs{display:flex;gap:4px}
+.nav-btn{
+  padding:6px 16px;border-radius:6px;border:none;
+  background:transparent;color:var(--sub);font-weight:700;font-size:13px;
+  transition:all .2s;
+}
+.nav-btn.active{background:var(--surface);color:var(--green)}
+.nav-btn:hover:not(.active){color:var(--text)}
+
+/* QUOTE BAR */
+#quotebar{
+  background:linear-gradient(90deg,#0d1117,#161b22);
+  border-bottom:1px solid var(--border);
+  padding:10px 24px;display:flex;align-items:center;gap:12px;min-height:44px;
+}
+#quote-text{color:var(--sub);font-family:'Space Mono',monospace;font-size:12px;font-style:italic}
+#quote-author{color:var(--muted);font-family:'Space Mono',monospace;font-size:11px;margin-left:auto;white-space:nowrap}
+
+/* MAIN */
+#main{max-width:1000px;margin:0 auto;padding:28px 24px}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* OVERALL PROGRESS */
+#overall-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:16px;
+  padding:24px 28px;display:flex;align-items:center;gap:24px;margin-bottom:24px;
+}
+.ring-wrap{position:relative;flex-shrink:0}
+.ring-wrap svg{display:block}
+.ring-label{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  text-align:center;font-family:'Space Mono',monospace;font-size:13px;
+  color:var(--green);font-weight:700;
+}
+.overall-title{font-size:20px;font-weight:800;letter-spacing:-.5px}
+.overall-sub{color:var(--sub);font-family:'Space Mono',monospace;font-size:13px;margin-top:4px}
+.overall-bar-wrap{margin-top:10px;height:6px;width:min(280px,100%);background:var(--border);border-radius:99px;overflow:hidden}
+.overall-bar{height:100%;background:linear-gradient(90deg,var(--green),var(--blue));border-radius:99px;transition:width .5s ease}
+
+/* PHASE MINI CARDS */
+#phase-cards{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:28px}
+.phase-mini{
+  background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  padding:12px 14px;text-align:center;transition:border-color .3s;
+}
+.phase-mini.done{border-color:var(--phasecolor,var(--green))}
+.phase-mini-label{font-family:'Space Mono',monospace;font-size:11px;font-weight:700}
+.phase-mini-title{font-size:13px;font-weight:700;margin-top:2px}
+.phase-mini-pct{font-family:'Space Mono',monospace;font-size:18px;font-weight:900;margin-top:6px}
+.phase-mini-count{color:var(--muted);font-family:'Space Mono',monospace;font-size:10px}
+
+/* PHASE BLOCKS */
+.phase-block{margin-bottom:20px}
+.phase-header{
+  background:var(--surface);border:2px solid var(--border);border-radius:14px;
+  padding:18px 22px;cursor:pointer;display:flex;align-items:center;
+  justify-content:space-between;user-select:none;transition:border-color .2s;
+}
+.phase-header.open{border-color:var(--phasecolor)}
+.phase-header-left{display:flex;align-items:center;gap:14px}
+.phase-ring-wrap{position:relative;width:52px;height:52px;flex-shrink:0}
+.phase-ring-wrap svg{display:block}
+.phase-ring-label{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:'Space Mono',monospace;font-size:10px;font-weight:700;
+}
+.phase-name{font-family:'Space Mono',monospace;font-size:11px;font-weight:700}
+.phase-title{font-size:16px;font-weight:800}
+.phase-dur{color:var(--sub);font-family:'Space Mono',monospace;font-size:11px;margin-top:2px}
+.phase-header-right{display:flex;align-items:center;gap:10px}
+.phase-count{font-family:'Space Mono',monospace;font-size:12px;color:var(--sub)}
+.chevron{color:var(--muted);font-size:18px;transition:transform .2s}
+.phase-body{padding:16px 4px 0;display:none}
+.phase-body.open{display:block}
+
+/* WEEK BLOCKS */
+.week-block{margin-bottom:12px}
+.week-header{
+  background:var(--surface2);border:1px solid var(--border);border-radius:10px;
+  padding:14px 18px;cursor:pointer;display:flex;align-items:center;
+  justify-content:space-between;user-select:none;
+}
+.week-header.open{border-color:var(--phasecolor,var(--green))44}
+.week-header-left{display:flex;align-items:center;gap:12px}
+.week-label{font-family:'Space Mono',monospace;font-size:11px;opacity:.8}
+.week-title{font-weight:700;font-size:14px}
+.week-header-right{display:flex;align-items:center;gap:12px}
+.week-count{font-family:'Space Mono',monospace;font-size:11px;color:var(--sub)}
+.week-bar-wrap{width:60px;height:4px;background:var(--border);border-radius:99px;overflow:hidden}
+.week-bar{height:100%;transition:width .4s}
+.week-body{
+  background:var(--surface2);border:1px solid var(--border);
+  border-top:none;border-bottom-left-radius:10px;border-bottom-right-radius:10px;
+  padding:16px 18px;display:none;
+}
+.week-body.open{display:block}
+
+/* TASKS */
+.task-item{
+  display:flex;align-items:flex-start;gap:12px;padding:10px 14px;
+  border-radius:8px;cursor:pointer;margin-bottom:6px;
+  border:1px solid var(--border);transition:all .2s;user-select:none;
+}
+.task-item:hover{border-color:var(--muted)}
+.task-item.done{background:rgba(0,255,136,.04);border-color:rgba(0,255,136,.15)}
+.task-checkbox{
+  width:18px;height:18px;border-radius:4px;border:2px solid var(--muted);
+  flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;
+  transition:all .2s;
+}
+.task-item.done .task-checkbox{background:var(--green);border-color:var(--green)}
+.task-checkbox-tick{color:#0a0a0f;font-size:11px;font-weight:900;display:none}
+.task-item.done .task-checkbox-tick{display:block}
+.task-text{
+  color:var(--text2);font-family:'Space Mono',monospace;font-size:13px;
+  line-height:1.5;transition:all .2s;
+}
+.task-item.done .task-text{color:var(--muted);text-decoration:line-through}
+
+/* RESOURCES */
+.resources-label{
+  color:var(--muted);font-family:'Space Mono',monospace;font-size:11px;
+  text-transform:uppercase;letter-spacing:1px;margin:14px 0 8px;
+}
+.resource-link{
+  display:inline-flex;align-items:center;gap:6px;color:#58a6ff;
+  font-size:12px;font-family:'Space Mono',monospace;padding:4px 10px;
+  background:rgba(88,166,255,.08);border-radius:6px;
+  border:1px solid rgba(88,166,255,.2);margin-right:8px;margin-bottom:6px;
+  transition:background .2s;
+}
+.resource-link:hover{background:rgba(88,166,255,.18)}
+
+/* SOFT SKILLS */
+.soft-intro{color:var(--sub);font-family:'Space Mono',monospace;font-size:12px;margin-top:4px;margin-bottom:20px}
+.soft-section{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:18px 20px;margin-bottom:16px;
+}
+.soft-section-title{color:var(--purple);font-weight:700;font-size:15px;margin-bottom:12px}
+
+/* RESUME BUILDER */
+.resume-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.resume-title{font-size:20px;font-weight:800}
+.resume-subtitle{color:var(--sub);font-family:'Space Mono',monospace;font-size:11px;margin-top:4px}
+.resume-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.res-btn{
+  padding:8px 18px;border-radius:6px;border:none;font-weight:700;font-size:13px;
+  transition:all .2s;
+}
+.res-btn.outline{background:var(--surface2);color:var(--sub)}
+.res-btn.outline.active{background:var(--surface);color:var(--green)}
+.res-btn.primary{background:var(--yellow);color:#0a0a0f}
+.resume-form{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media(max-width:700px){
+  .resume-form{grid-template-columns:1fr}
+  #phase-cards{grid-template-columns:repeat(2,1fr)}
+}
+.form-section-label{
+  color:var(--green);font-family:'Space Mono',monospace;font-size:11px;font-weight:700;
+  text-transform:uppercase;letter-spacing:1.5px;margin:20px 0 10px;
+  border-bottom:1px solid var(--border);padding-bottom:6px;
+}
+.form-section-label:first-child{margin-top:0}
+.field-wrap{margin-bottom:12px}
+.field-label{
+  display:block;color:var(--sub);font-family:'Space Mono',monospace;
+  font-size:11px;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;
+}
+.field-input,.field-textarea{
+  width:100%;background:var(--surface2);border:1px solid var(--border);
+  border-radius:6px;padding:8px 12px;color:var(--text);
+  font-family:'Space Mono',monospace;font-size:12px;outline:none;
+  transition:border-color .2s;
+}
+.field-input:focus,.field-textarea:focus{border-color:var(--green)}
+.field-textarea{resize:vertical}
+.sub-card{background:var(--surface2);border-radius:8px;padding:12px;margin-bottom:14px;border:1px solid var(--border)}
+.sub-card-label{color:var(--purple);font-family:'Space Mono',monospace;font-size:11px;margin-bottom:8px}
+.points-label{color:var(--sub);font-size:11px;font-family:'Space Mono',monospace;margin-bottom:6px}
+.point-input{
+  width:100%;background:var(--surface);border:1px solid var(--border);
+  border-radius:6px;padding:7px 10px;color:var(--text);
+  font-family:'Space Mono',monospace;font-size:11px;outline:none;
+  margin-bottom:6px;transition:border-color .2s;
+}
+.point-input:focus{border-color:var(--green)}
+.add-btn{
+  background:none;border:1px dashed var(--muted);border-radius:6px;
+  color:var(--muted);padding:4px 10px;font-size:11px;font-family:'Space Mono',monospace;
+  transition:all .2s;
+}
+.add-btn:hover{border-color:var(--sub);color:var(--sub)}
+
+/* RESUME PREVIEW (screen) */
+#resume-preview-wrap{
+  overflow:auto;background:#f0f0f0;border-radius:12px;
+  padding:20px;display:flex;justify-content:center;
+}
+#resume-preview{
+  background:#fff;color:#111;font-family:Georgia,serif;
+  width:210mm;min-height:297mm;padding:14mm 14mm;
+  font-size:10.5pt;line-height:1.4;box-sizing:border-box;
+}
+.rv-header{text-align:center;border-bottom:2px solid #111;padding-bottom:8px;margin-bottom:10px}
+.rv-name{font-size:20pt;font-weight:bold;font-family:Arial,sans-serif;letter-spacing:1px}
+.rv-role{font-size:10pt;color:#333;margin-top:4px}
+.rv-contacts{font-size:9pt;color:#444;margin-top:4px;display:flex;justify-content:center;flex-wrap:wrap;gap:8px}
+.rv-section-title{
+  font-family:Arial;font-weight:bold;font-size:10pt;text-transform:uppercase;
+  letter-spacing:1px;border-bottom:1px solid #ccc;margin-bottom:5px;padding-bottom:2px;
+}
+.rv-section{margin-bottom:10px}
+.rv-skills-table{width:100%;border-collapse:collapse;font-size:9.5pt}
+.rv-skills-table td{padding:1px 0;color:#333}
+.rv-skills-table td:first-child{width:28%;font-weight:bold;color:#111}
+.rv-proj-header{display:flex;justify-content:space-between;align-items:baseline}
+.rv-proj-name{font-weight:bold;font-family:Arial;font-size:9.5pt}
+.rv-proj-tech{font-size:8.5pt;color:#555;font-style:italic}
+.rv-proj-links{font-size:8.5pt;color:#555;margin-top:1px}
+.rv-ul{margin:3px 0 0 16px;padding-left:0}
+.rv-ul li{font-size:9pt;color:#333;margin-bottom:2px}
+.rv-edu-row{display:flex;justify-content:space-between;margin-bottom:4px;font-size:9.5pt}
+.rv-edu-right{text-align:right;color:#555;font-style:italic}
+
+/* PRINT STYLES */
+@media print{
+  body{background:white!important}
+  #topbar,#quotebar,#main{display:none!important}
+  #print-area{display:block!important}
+}
+#print-area{display:none}
+
+/* COMPANIES TAB */
+.companies-intro{color:var(--sub);font-family:'Space Mono',monospace;font-size:12px;margin-top:4px;margin-bottom:24px}
+.company-filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.filter-btn{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--sub);font-family:'Space Mono',monospace;font-size:11px;cursor:pointer;transition:all .2s}
+.filter-btn.active{background:var(--green);color:#0a0a0f;border-color:var(--green);font-weight:700}
+.filter-btn:hover:not(.active){border-color:var(--sub);color:var(--text)}
+.company-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.company-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;transition:border-color .2s;position:relative}
+.company-card:hover{border-color:var(--muted)}
+.company-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
+.company-name{font-size:15px;font-weight:800;color:var(--text)}
+.company-badge{font-family:'Space Mono',monospace;font-size:10px;padding:3px 8px;border-radius:20px;font-weight:700}
+.badge-priority{background:rgba(0,255,136,.15);color:var(--green);border:1px solid rgba(0,255,136,.3)}
+.badge-good{background:rgba(0,207,255,.12);color:var(--blue);border:1px solid rgba(0,207,255,.25)}
+.badge-kerala{background:rgba(199,125,255,.12);color:var(--purple);border:1px solid rgba(199,125,255,.25)}
+.badge-product{background:rgba(255,107,53,.12);color:var(--orange);border:1px solid rgba(255,107,53,.25)}
+.badge-startup{background:rgba(255,214,10,.12);color:var(--yellow);border:1px solid rgba(255,214,10,.25)}
+.company-type{color:var(--sub);font-family:'Space Mono',monospace;font-size:11px;margin-bottom:8px}
+.company-role{color:var(--text2);font-size:12px;margin-bottom:8px;line-height:1.5}
+.company-stack{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}
+.stack-tag{font-family:'Space Mono',monospace;font-size:10px;padding:2px 7px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;color:var(--sub)}
+.company-meta{display:flex;gap:12px;margin-bottom:10px}
+.meta-item{font-family:'Space Mono',monospace;font-size:10px;color:var(--muted)}
+.meta-item span{color:var(--text2)}
+.company-link{display:inline-flex;align-items:center;gap:5px;color:#58a6ff;font-family:'Space Mono',monospace;font-size:11px;padding:5px 10px;background:rgba(88,166,255,.08);border-radius:6px;border:1px solid rgba(88,166,255,.2);transition:background .2s}
+.company-link:hover{background:rgba(88,166,255,.18)}
+.company-notes{font-family:'Space Mono',monospace;font-size:11px;color:var(--sub);font-style:italic;border-top:1px solid var(--border);padding-top:8px;margin-top:8px;line-height:1.5}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--surface2)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE — TABLET (≤768px)
+═══════════════════════════════════════════ */
+@media(max-width:768px){
+  /* Topbar: stack logo and nav */
+  #topbar{
+    height:auto;padding:10px 14px;
+    flex-direction:column;align-items:flex-start;gap:8px;
+  }
+  .logo-sub{font-size:11px}
+  .nav-tabs{width:100%;gap:2px;flex-wrap:wrap}
+  .nav-btn{padding:5px 10px;font-size:11px;flex:1;text-align:center}
+
+  /* Quote bar */
+  #quotebar{padding:8px 14px;flex-wrap:wrap;gap:6px}
+  #quote-author{margin-left:0;width:100%;text-align:right}
+
+  /* Main padding */
+  #main{padding:16px 14px}
+
+  /* Overall card — stack vertically */
+  #overall-card{
+    flex-direction:column;align-items:flex-start;gap:16px;
+    padding:18px 16px;
+  }
+  .overall-bar-wrap{width:100%}
+
+  /* Phase mini cards: 3 columns then 2 */
+  #phase-cards{grid-template-columns:repeat(3,1fr)}
+
+  /* Phase header: tighten */
+  .phase-header{padding:14px 16px}
+  .phase-header-left{gap:10px}
+  .phase-title{font-size:14px}
+  .phase-dur{font-size:10px}
+  .phase-ring-wrap{width:44px;height:44px}
+
+  /* Week */
+  .week-header{padding:12px 14px}
+  .week-body{padding:12px 14px}
+  .week-bar-wrap{width:44px}
+
+  /* Task */
+  .task-item{padding:8px 10px;gap:10px}
+  .task-text{font-size:12px}
+
+  /* Soft skills */
+  .soft-section{padding:14px 14px}
+
+  /* Resume form: single column always */
+  .resume-form{grid-template-columns:1fr}
+
+  /* Resume preview: scale to fit */
+  #resume-preview-wrap{padding:10px}
+  #resume-preview{
+    width:100%;min-height:auto;
+    transform-origin:top center;
+    font-size:9pt;padding:10mm 10mm;
+  }
+
+  /* Companies */
+  .company-grid{grid-template-columns:1fr}
+  .company-filter-bar{gap:6px}
+  .filter-btn{font-size:10px;padding:5px 10px}
+}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE — MOBILE (≤480px)
+═══════════════════════════════════════════ */
+@media(max-width:480px){
+  /* Topbar */
+  #topbar{padding:8px 12px}
+  .nav-btn{padding:5px 6px;font-size:10px}
+
+  /* Main */
+  #main{padding:12px 10px}
+
+  /* Overall card */
+  #overall-card{padding:14px 12px}
+  .overall-title{font-size:17px}
+  .overall-sub{font-size:11px}
+
+  /* Phase mini: 2 columns */
+  #phase-cards{grid-template-columns:repeat(2,1fr);gap:6px}
+  .phase-mini{padding:10px}
+  .phase-mini-pct{font-size:15px}
+
+  /* Phase header */
+  .phase-header{padding:12px 12px;gap:8px}
+  .phase-header-right{gap:6px}
+  .phase-count{font-size:10px}
+  .phase-title{font-size:13px}
+  .phase-name{font-size:10px}
+  .chevron{font-size:15px}
+
+  /* Week */
+  .week-header{padding:10px 10px}
+  .week-title{font-size:13px}
+  .week-label{font-size:10px}
+  .week-body{padding:10px 10px}
+  .week-bar-wrap{display:none}
+
+  /* Task */
+  .task-item{padding:8px 8px;gap:8px;margin-bottom:4px}
+  .task-text{font-size:11px}
+  .task-checkbox{width:16px;height:16px}
+
+  /* Resources */
+  .resource-link{font-size:11px;padding:4px 8px}
+  .resources-label{font-size:10px}
+
+  /* Company cards */
+  .company-card{padding:14px}
+  .company-name{font-size:14px}
+  .company-grid{gap:10px}
+
+  /* Resume header actions: stack */
+  .resume-actions{flex-direction:column;gap:6px}
+  .res-btn{width:100%;text-align:center}
+
+  /* Resume preview: horizontal scroll */
+  #resume-preview-wrap{
+    padding:8px;overflow-x:auto;justify-content:flex-start;
+  }
+  #resume-preview{
+    min-width:320px;font-size:8pt;padding:8mm 8mm;
+  }
+
+  /* Soft section */
+  .soft-section-title{font-size:13px}
+}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE — VERY SMALL (≤360px)
+═══════════════════════════════════════════ */
+@media(max-width:360px){
+  .nav-btn{font-size:9px;padding:4px 5px}
+  #phase-cards{grid-template-columns:1fr 1fr}
+  .phase-mini-pct{font-size:13px}
+}
+</style>
 </head>
 <body>
-  <div id="root"></div>
-  <script type="text/babel" src="app.jsx"></script>
+
+<!-- TOP BAR -->
+<div id="topbar">
+  <div style="display:flex;align-items:center">
+    <span class="logo">GL17CH</span>
+    <span class="logo-sub">/ Dev Roadmap 2026</span>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-btn active" data-tab="roadmap">🗺 Roadmap</button>
+    <button class="nav-btn" data-tab="soft">🗣 Soft Skills</button>
+    <button class="nav-btn" data-tab="companies">🏢 Companies</button>
+    <button class="nav-btn" data-tab="resume">📄 Resume Builder</button>
+  </div>
+</div>
+
+<!-- QUOTE BAR -->
+<div id="quotebar">
+  <span style="color:var(--green);font-family:'Space Mono',monospace;font-size:14px">✦</span>
+  <span id="quote-text"></span>
+  <span id="quote-author"></span>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+
+  <!-- ROADMAP TAB -->
+  <div id="tab-roadmap" class="tab-content active">
+    <div id="overall-card">
+      <div class="ring-wrap">
+        <svg width="80" height="80" id="overall-ring-svg"></svg>
+        <div class="ring-label" id="overall-pct-label">0%</div>
+      </div>
+      <div>
+        <div class="overall-title">Overall Progress</div>
+        <div class="overall-sub" id="overall-count-label">0 / 0 tasks completed</div>
+        <div class="overall-bar-wrap"><div class="overall-bar" id="overall-bar" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div id="phase-cards"></div>
+    <div id="phases-container"></div>
+  </div>
+
+  <!-- SOFT SKILLS TAB -->
+  <div id="tab-soft" class="tab-content">
+    <h2 style="font-size:20px;font-weight:800">Soft Skills Tracker</h2>
+    <p class="soft-intro">Run these PARALLEL to your technical roadmap — every week, all the way.</p>
+    <div id="soft-container"></div>
+  </div>
+
+  <!-- COMPANIES TAB -->
+  <div id="tab-companies" class="tab-content">
+    <h2 style="font-size:20px;font-weight:800">Target Companies</h2>
+    <p class="companies-intro">All companies below hire freshers for developer roles off-campus. Sorted by priority. Filter by category.</p>
+    <div class="company-filter-bar">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="priority">⭐ Priority</button>
+      <button class="filter-btn" data-filter="mass">Mass Recruiters</button>
+      <button class="filter-btn" data-filter="kerala">Kerala Based</button>
+      <button class="filter-btn" data-filter="product">Product/Mid-tier</button>
+      <button class="filter-btn" data-filter="startup">Startups</button>
+    </div>
+    <div class="company-grid" id="company-grid"></div>
+  </div>
+
+  <!-- RESUME TAB -->
+  <div id="tab-resume" class="tab-content">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px">
+      <div>
+        <div class="resume-title">ATS Resume Builder</div>
+        <div class="resume-subtitle">Auto-saved. Fill once, download anytime.</div>
+      </div>
+      <div class="resume-actions">
+        <button class="res-btn outline active" id="btn-form">✎ Edit</button>
+        <button class="res-btn outline" id="btn-preview">👁 Preview</button>
+        <button class="res-btn primary" id="btn-download">⬇ Download PDF</button>
+      </div>
+    </div>
+    <div id="resume-form-wrap"></div>
+    <div id="resume-preview-wrap" style="display:none">
+      <div id="resume-preview"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- HIDDEN PRINT AREA -->
+<div id="print-area"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════════════════════
+
+const QUOTES = [
+  {text:"The secret of getting ahead is getting started.",author:"Mark Twain"},
+  {text:"Don't watch the clock; do what it does. Keep going.",author:"Sam Levenson"},
+  {text:"You don't have to be great to start, but you have to start to be great.",author:"Zig Ziglar"},
+  {text:"Success is the sum of small efforts repeated day in and day out.",author:"Robert Collier"},
+  {text:"It's not about having time. It's about making time.",author:"Unknown"},
+  {text:"The expert in anything was once a beginner.",author:"Helen Hayes"},
+  {text:"Push yourself, because no one else is going to do it for you.",author:"Unknown"},
+  {text:"Great things never come from comfort zones.",author:"Unknown"},
+  {text:"Dream it. Wish it. Do it.",author:"Unknown"},
+  {text:"Wake up with determination. Go to bed with satisfaction.",author:"Unknown"},
+  {text:"It always seems impossible until it's done.",author:"Nelson Mandela"},
+  {text:"Don't stop when you're tired. Stop when you're done.",author:"Unknown"},
+  {text:"Work hard in silence, let your success be your noise.",author:"Frank Ocean"},
+  {text:"Code is like humor. When you have to explain it, it's bad.",author:"Cory House"},
+  {text:"First, solve the problem. Then, write the code.",author:"John Johnson"},
+  {text:"Experience is the name everyone gives to their mistakes.",author:"Oscar Wilde"},
+];
+
+const ROADMAP = [
+  {
+    phase:"PHASE 1",title:"JS Deep Dive",duration:"May 20 – May 26",color:"#00ff88",
+    weeks:[{
+      week:"Week 1",title:"JavaScript Mastery",
+      tasks:[
+        {id:"p1w1t1",text:"ES6+ arrow functions — syntax, this binding, when to use"},
+        {id:"p1w1t2",text:"Destructuring — arrays, objects, nested, with defaults"},
+        {id:"p1w1t3",text:"Spread & Rest operators — all use cases"},
+        {id:"p1w1t4",text:"Promises — create, chain, .then/.catch/.finally"},
+        {id:"p1w1t5",text:"Async/Await — convert promise chains, try/catch"},
+        {id:"p1w1t6",text:"Array methods — map, filter, reduce, find, some, every"},
+        {id:"p1w1t7",text:"DOM manipulation — querySelector, addEventListener, classList"},
+        {id:"p1w1t8",text:"Event delegation & bubbling"},
+        {id:"p1w1t9",text:"Modules — import/export (ES6)"},
+        {id:"p1w1t10",text:"Build: To-do app with localStorage (pure JS, no framework)"},
+        {id:"p1w1t11",text:"LeetCode: 3 Easy array problems"},
+        {id:"p1w1t12",text:"Aptitude: Indiabix — 20 quant questions"},
+      ],
+      resources:[
+        {label:"JS.info — Modern JavaScript Tutorial",url:"https://javascript.info"},
+        {label:"MDN JS Reference",url:"https://developer.mozilla.org/en-US/docs/Web/JavaScript"},
+        {label:"freeCodeCamp JS Algorithms",url:"https://www.freecodecamp.org/learn/javascript-algorithms-and-data-structures/"},
+      ]
+    }]
+  },
+  {
+    phase:"PHASE 2",title:"React + Node + MySQL",duration:"May 27 – Aug 31",color:"#00cfff",
+    weeks:[
+      {
+        week:"Week 2–4",title:"React Fundamentals",
+        tasks:[
+          {id:"p2w1t1",text:"Setup: Vite + React project scaffold"},
+          {id:"p2w1t2",text:"JSX syntax — expressions, fragments, conditionals"},
+          {id:"p2w1t3",text:"Components — functional, props, prop types"},
+          {id:"p2w1t4",text:"useState — all forms, state immutability"},
+          {id:"p2w1t5",text:"useEffect — dependencies, cleanup, fetch on mount"},
+          {id:"p2w1t6",text:"Lists & keys — rendering arrays properly"},
+          {id:"p2w1t7",text:"Event handling in React"},
+          {id:"p2w1t8",text:"Controlled components — forms, inputs"},
+          {id:"p2w1t9",text:"React Router — BrowserRouter, Route, Link, useNavigate"},
+          {id:"p2w1t10",text:"Fetching data with Axios or fetch API"},
+          {id:"p2w1t11",text:"Component lifecycle understanding"},
+          {id:"p2w1t12",text:"Build: Movie search app using OMDB/TMDB free API"},
+          {id:"p2w1t13",text:"Deploy movie app to Netlify/Vercel"},
+          {id:"p2w1t14",text:"LeetCode: 2 Easy problems daily"},
+          {id:"p2w1t15",text:"Aptitude: Indiabix — logical reasoning 20 questions"},
+        ],
+        resources:[
+          {label:"React Official Docs",url:"https://react.dev/learn"},
+          {label:"Vite Setup Guide",url:"https://vitejs.dev/guide/"},
+          {label:"OMDB API (free movie API)",url:"https://www.omdbapi.com/"},
+          {label:"Netlify Deploy Docs",url:"https://docs.netlify.com/"},
+        ]
+      },
+      {
+        week:"Week 5–7",title:"Node.js + Express + MySQL (Project-level)",
+        tasks:[
+          {id:"p2w2t1",text:"Node.js basics — modules, require, npm, package.json"},
+          {id:"p2w2t2",text:"Express setup — app.js, middleware, routes"},
+          {id:"p2w2t3",text:"REST API design — GET, POST, PUT, DELETE"},
+          {id:"p2w2t4",text:"Request/Response cycle, status codes"},
+          {id:"p2w2t5",text:"mysql2 package — connect Node to MySQL"},
+          {id:"p2w2t6",text:"CRUD operations via Express + MySQL"},
+          {id:"p2w2t7",text:"Environment variables with dotenv"},
+          {id:"p2w2t8",text:"CORS setup for frontend-backend communication"},
+          {id:"p2w2t9",text:"Error handling middleware in Express"},
+          {id:"p2w2t10",text:"Postman/Thunder Client — test all your APIs"},
+          {id:"p2w2t11",text:"Build: Task Manager REST API (full CRUD)"},
+          {id:"p2w2t12",text:"Deploy backend to Render (free tier)"},
+          {id:"p2w2t13",text:"LeetCode: 2 Easy + 1 Medium problem daily"},
+        ],
+        resources:[
+          {label:"Node.js Official Docs",url:"https://nodejs.org/en/docs"},
+          {label:"Express.js Guide",url:"https://expressjs.com/en/guide/routing.html"},
+          {label:"mysql2 npm package",url:"https://www.npmjs.com/package/mysql2"},
+          {label:"Render (free backend hosting)",url:"https://render.com"},
+          {label:"Thunder Client VS Code",url:"https://www.thunderclient.com/"},
+        ]
+      },
+      {
+        week:"Week 8–11",title:"Full Stack Project 1",
+        tasks:[
+          {id:"p2w3t1",text:"Plan project: Student Result Management System or Job Tracker"},
+          {id:"p2w3t2",text:"Design database schema — tables, relations, foreign keys"},
+          {id:"p2w3t3",text:"Build all backend API routes with Express + MySQL"},
+          {id:"p2w3t4",text:"Build React frontend consuming your own API"},
+          {id:"p2w3t5",text:"Add authentication — JWT or session-based"},
+          {id:"p2w3t6",text:"Add form validation frontend + backend"},
+          {id:"p2w3t7",text:"Deploy frontend (Vercel) + backend (Render) + DB (Supabase)"},
+          {id:"p2w3t8",text:"Write proper README with screenshots and live link"},
+          {id:"p2w3t9",text:"Push to GitHub — clean commit history"},
+          {id:"p2w3t10",text:"Practice verbal project walkthrough (2 mins)"},
+          {id:"p2w3t11",text:"LeetCode: 10 problems total this block"},
+          {id:"p2w3t12",text:"Aptitude: 30 verbal ability questions on Indiabix"},
+        ],
+        resources:[
+          {label:"JWT Authentication Guide",url:"https://jwt.io/introduction"},
+          {label:"Supabase (free DB)",url:"https://supabase.com"},
+          {label:"GitHub README Best Practices",url:"https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes"},
+        ]
+      },
+    ]
+  },
+  {
+    phase:"PHASE 3",title:"Java + DSA",duration:"Sep 1 – Oct 15",color:"#ff6b35",
+    weeks:[
+      {
+        week:"Week 12–14",title:"Core Java (Interview-Ready)",
+        tasks:[
+          {id:"p3w1t1",text:"OOP — classes, objects, constructors"},
+          {id:"p3w1t2",text:"Inheritance — extends, super, method overriding"},
+          {id:"p3w1t3",text:"Polymorphism — compile-time vs runtime"},
+          {id:"p3w1t4",text:"Encapsulation — getters, setters, access modifiers"},
+          {id:"p3w1t5",text:"Abstraction — abstract classes, interfaces"},
+          {id:"p3w1t6",text:"Exception handling — try/catch/finally, custom exceptions"},
+          {id:"p3w1t7",text:"Collections — ArrayList, LinkedList, HashMap, HashSet"},
+          {id:"p3w1t8",text:"String class methods — top 20 used in interviews"},
+          {id:"p3w1t9",text:"Static keyword — fields, methods, blocks"},
+          {id:"p3w1t10",text:"Write 25 Java programs covering all above"},
+          {id:"p3w1t11",text:"Practice: Explain OOP concepts out loud without notes"},
+        ],
+        resources:[
+          {label:"W3Schools Java Tutorial",url:"https://www.w3schools.com/java/"},
+          {label:"JavaPoint OOP Guide",url:"https://www.javatpoint.com/java-oops-concepts"},
+          {label:"GeeksforGeeks Java",url:"https://www.geeksforgeeks.org/java/"},
+        ]
+      },
+      {
+        week:"Week 15–17",title:"DSA Fundamentals",
+        tasks:[
+          {id:"p3w2t1",text:"Arrays — traversal, rotation, duplicates, sliding window"},
+          {id:"p3w2t2",text:"Strings — reversal, palindrome, anagram, substring problems"},
+          {id:"p3w2t3",text:"Linked List — singly, doubly, reverse, detect cycle"},
+          {id:"p3w2t4",text:"Stack — implementation, valid parentheses, next greater element"},
+          {id:"p3w2t5",text:"Queue — implementation, circular queue"},
+          {id:"p3w2t6",text:"Binary Search — standard + variants"},
+          {id:"p3w2t7",text:"Sorting — Bubble, Selection, Insertion, Merge, Quick (understand not memorize)"},
+          {id:"p3w2t8",text:"Recursion — factorial, fibonacci, backtracking basics"},
+          {id:"p3w2t9",text:"HashMap problems — two sum, frequency count, grouping"},
+          {id:"p3w2t10",text:"Two pointer technique — 5 problems"},
+          {id:"p3w2t11",text:"Target: 60 LeetCode problems by Oct 15 (Easy + Medium)"},
+          {id:"p3w2t12",text:"Aptitude: 100 quant problems on PrepInsta"},
+        ],
+        resources:[
+          {label:"LeetCode (primary DSA platform)",url:"https://leetcode.com/problemset/"},
+          {label:"Striver's A2Z DSA Sheet",url:"https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2/"},
+          {label:"NeetCode Roadmap",url:"https://neetcode.io/roadmap"},
+          {label:"GeeksforGeeks DSA",url:"https://www.geeksforgeeks.org/data-structures/"},
+        ]
+      },
+    ]
+  },
+  {
+    phase:"PHASE 4",title:"Project 2 + Apply",duration:"Oct 16 – Nov 30",color:"#c77dff",
+    weeks:[
+      {
+        week:"Week 18–20",title:"Full Stack Project 2",
+        tasks:[
+          {id:"p4w1t1",text:"Plan: Expense Tracker with Auth OR Mini E-commerce"},
+          {id:"p4w1t2",text:"Implement Login/Register with JWT + bcrypt password hashing"},
+          {id:"p4w1t3",text:"Full CRUD with MySQL + protected routes"},
+          {id:"p4w1t4",text:"React frontend — clean UI, responsive design"},
+          {id:"p4w1t5",text:"Add loading states, error handling, toast notifications"},
+          {id:"p4w1t6",text:"Deploy fully — frontend + backend + DB all live"},
+          {id:"p4w1t7",text:"README with live demo link + screenshots"},
+          {id:"p4w1t8",text:"Verbal pitch: explain this project in 3 minutes"},
+        ],
+        resources:[
+          {label:"bcrypt npm package",url:"https://www.npmjs.com/package/bcrypt"},
+          {label:"React Toastify",url:"https://www.npmjs.com/package/react-toastify"},
+          {label:"Tailwind CSS Docs",url:"https://tailwindcss.com/docs"},
+        ]
+      },
+      {
+        week:"Week 21–22",title:"Resume + LinkedIn + GitHub Polish",
+        tasks:[
+          {id:"p4w2t1",text:"Build ATS resume — 1 page, clean format (use Resume Builder tab)"},
+          {id:"p4w2t2",text:"Skills section: list all tech stack accurately"},
+          {id:"p4w2t3",text:"Projects: 2–3 projects with live link + GitHub link"},
+          {id:"p4w2t4",text:"Experience: Eduskhetra trainer role with impact points"},
+          {id:"p4w2t5",text:"Get resume reviewed by 2 people"},
+          {id:"p4w2t6",text:"LinkedIn: update headline, about, skills, add projects"},
+          {id:"p4w2t7",text:"GitHub: pin 2 best projects, clean up old repos"},
+          {id:"p4w2t8",text:"Write one LinkedIn post about a project you built"},
+          {id:"p4w2t9",text:"Naukri profile — fill 100% completion"},
+        ],
+        resources:[
+          {label:"ATS Resume Checker — Jobscan",url:"https://www.jobscan.co"},
+          {label:"GitHub Profile README Guide",url:"https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-profile/customizing-your-profile/managing-your-profile-readme"},
+        ]
+      },
+      {
+        week:"Week 23–24",title:"Start Applying",
+        tasks:[
+          {id:"p4w3t1",text:"UST Global — use referral NOW, apply on careers.ust.com"},
+          {id:"p4w3t2",text:"TCS NextStep — register at nextstep.tcs.com"},
+          {id:"p4w3t3",text:"Infosys InfyTQ — register at infytq.infosys.com"},
+          {id:"p4w3t4",text:"Wipro NLTH — register at wipro.com/careers"},
+          {id:"p4w3t5",text:"Cognizant careers portal — careers.cognizant.com"},
+          {id:"p4w3t6",text:"Capgemini careers — careers.capgemini.com"},
+          {id:"p4w3t7",text:"HCL — hcltech.com/careers"},
+          {id:"p4w3t8",text:"LinkedIn Easy Apply — 5 jobs/day"},
+          {id:"p4w3t9",text:"Naukri — apply to 5 fresher dev jobs daily"},
+          {id:"p4w3t10",text:"Unstop — register and look for coding contests + jobs"},
+          {id:"p4w3t11",text:"Join Telegram: freshershunt, offcampusjobs4u channels"},
+          {id:"p4w3t12",text:"Target: 15+ applications sent by Nov 30"},
+        ],
+        resources:[
+          {label:"TCS NextStep Portal",url:"https://nextstep.tcs.com"},
+          {label:"Infosys InfyTQ",url:"https://infytq.infosys.com"},
+          {label:"Wipro Careers",url:"https://careers.wipro.com"},
+          {label:"Unstop (contests + jobs)",url:"https://unstop.com"},
+          {label:"Freshershunt (alerts)",url:"https://freshershunt.in"},
+        ]
+      },
+    ]
+  },
+  {
+    phase:"PHASE 5",title:"Interview Prep",duration:"Dec 1 – Jan 1",color:"#ffd60a",
+    weeks:[
+      {
+        week:"Week 25–27",title:"Technical Interview Preparation",
+        tasks:[
+          {id:"p5w1t1",text:"DBMS: Normalization (1NF–3NF), joins, keys, ACID, transactions"},
+          {id:"p5w1t2",text:"OS: Process vs Thread, scheduling algorithms, deadlock, paging"},
+          {id:"p5w1t3",text:"CN: OSI model, TCP/IP, HTTP/HTTPS, DNS, REST basics"},
+          {id:"p5w1t4",text:"Top 50 React interview questions — write answers, don't just read"},
+          {id:"p5w1t5",text:"Top 30 JavaScript interview questions — closures, hoisting, event loop"},
+          {id:"p5w1t6",text:"Top 30 Java OOP interview questions"},
+          {id:"p5w1t7",text:"Top 20 SQL query interview questions — write them by hand"},
+          {id:"p5w1t8",text:"Deep dive Project 1 — explain every line, every decision"},
+          {id:"p5w1t9",text:"Deep dive Project 2 — explain every line, every decision"},
+          {id:"p5w1t10",text:"LeetCode: Continue — target 85 problems total"},
+          {id:"p5w1t11",text:"Do 3 mock technical interviews (with friend or self-record)"},
+        ],
+        resources:[
+          {label:"InterviewBit DBMS Questions",url:"https://www.interviewbit.com/dbms-interview-questions/"},
+          {label:"GeeksforGeeks OS Questions",url:"https://www.geeksforgeeks.org/commonly-asked-operating-systems-interview-questions/"},
+          {label:"Top 50 React Questions",url:"https://www.interviewbit.com/react-interview-questions/"},
+          {label:"JS Interview Questions (GitHub)",url:"https://github.com/sudheerj/javascript-interview-questions"},
+        ]
+      },
+      {
+        week:"Week 28–29",title:"Aptitude + GD Grind",
+        tasks:[
+          {id:"p5w2t1",text:"Quant: Percentages, Profit/Loss, Time-Speed-Distance — 50 problems"},
+          {id:"p5w2t2",text:"Quant: Ratios, Averages, Simple & Compound Interest — 50 problems"},
+          {id:"p5w2t3",text:"Logical: Syllogisms, Blood Relations, Seating Arrangement — 30 each"},
+          {id:"p5w2t4",text:"Verbal: Reading Comprehension — 10 passages on Indiabix"},
+          {id:"p5w2t5",text:"PrepInsta: TCS mock aptitude test — 2 full tests"},
+          {id:"p5w2t6",text:"PrepInsta: Infosys mock aptitude test — 2 full tests"},
+          {id:"p5w2t7",text:"PrepInsta: Capgemini mock test — 2 full tests"},
+          {id:"p5w2t8",text:"GD: Join Telegram GD practice group"},
+          {id:"p5w2t9",text:"GD: Practice initiation — 5 different topics"},
+          {id:"p5w2t10",text:"GD: Practice summarization — 5 different topics"},
+          {id:"p5w2t11",text:"Record yourself in a solo GD — watch back once"},
+        ],
+        resources:[
+          {label:"Indiabix — Aptitude (Primary)",url:"https://www.indiabix.com"},
+          {label:"PrepInsta Company Mock Tests",url:"https://prepinsta.com"},
+          {label:"GD Topics with Points",url:"https://www.jagranjosh.com/general-knowledge/group-discussion-topics-1531309892-1"},
+        ]
+      },
+      {
+        week:"Week 30–32",title:"HR Prep + Final Sprint",
+        tasks:[
+          {id:"p5w3t1",text:"Write and rehearse 'Tell me about yourself' — 90 seconds, tight"},
+          {id:"p5w3t2",text:"Prepare: Why this company? (per company, different answer)"},
+          {id:"p5w3t3",text:"Prepare: Strengths with real example"},
+          {id:"p5w3t4",text:"Prepare: Weakness with mitigation story"},
+          {id:"p5w3t5",text:"Prepare: Where do you see yourself in 5 years?"},
+          {id:"p5w3t6",text:"Prepare: Tell me about a challenge you overcame"},
+          {id:"p5w3t7",text:"Do 5 full mock HR interviews (record yourself)"},
+          {id:"p5w3t8",text:"Body language: posture, eye contact, no fidgeting — daily mirror check"},
+          {id:"p5w3t9",text:"LeetCode final push — reach 90 problems by Jan 1"},
+          {id:"p5w3t10",text:"Follow up on all applications — LinkedIn messages to recruiters"},
+          {id:"p5w3t11",text:"Prepare questions to ask interviewers (2–3 per company)"},
+          {id:"p5w3t12",text:"Final resume check — latest projects, no typos, 1 page"},
+        ],
+        resources:[
+          {label:"Glassdoor HR Interview Questions",url:"https://www.glassdoor.co.in/Interview/index.htm"},
+          {label:"Indeed HR Prep Guide",url:"https://www.indeed.com/career-advice/interviewing/interview-question-tell-me-about-yourself"},
+        ]
+      },
+    ]
+  },
+];
+
+const SOFT_SKILLS = [
+  {
+    title:"Communication & Articulation",
+    tasks:[
+      {id:"ss1",text:"Speak your code logic out loud while coding (daily habit)"},
+      {id:"ss2",text:"Record 2-min self-intro video — do once every 2 weeks"},
+      {id:"ss3",text:"Read one news article ALOUD daily for 5 mins"},
+      {id:"ss4",text:"Explain what you learned each day to someone (or yourself)"},
+    ]
+  },
+  {
+    title:"Presentation & Project Pitching",
+    tasks:[
+      {id:"ss5",text:"After each project: prepare 3-min verbal walkthrough"},
+      {id:"ss6",text:"Explain your project to a non-tech person successfully"},
+      {id:"ss7",text:"Practice 'tell me about your project' 5 times per project"},
+    ]
+  },
+  {
+    title:"Group Discussion",
+    tasks:[
+      {id:"ss8",text:"Learn and practice PEEL structure (Point-Example-Explain-Link)"},
+      {id:"ss9",text:"Practice initiating a GD on 5 different topics (solo, out loud)"},
+      {id:"ss10",text:"Practice summarizing a GD on 5 different topics"},
+      {id:"ss11",text:"Join Telegram GD group and attend 3 live sessions"},
+      {id:"ss12",text:"Record one solo GD simulation — watch it back"},
+    ]
+  },
+  {
+    title:"Professional Writing",
+    tasks:[
+      {id:"ss13",text:"Write detailed README for every GitHub project"},
+      {id:"ss14",text:"Write one LinkedIn post per month about something learned"},
+      {id:"ss15",text:"Write professional email format — practice with mock scenario"},
+    ]
+  },
+  {
+    title:"Confidence & Body Language",
+    tasks:[
+      {id:"ss16",text:"Daily mirror practice — 5 mins, eye contact + posture"},
+      {id:"ss17",text:"Sit straight while coding (build the habit now)"},
+      {id:"ss18",text:"Record yourself answering 'tell me about yourself' monthly"},
+    ]
+  },
+];
+
+// ═══════════════════════════════════════════════════════════════════════
+// STORAGE
+// ═══════════════════════════════════════════════════════════════════════
+
+const STORAGE_KEY = 'gthm_progress_v2';
+const RESUME_KEY = 'gthm_resume_v1';
+
+function loadProgress(){
+  try{return JSON.parse(localStorage.getItem(STORAGE_KEY))||{};}
+  catch{return {};}
+}
+function saveProgress(p){
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(p));}catch{}
+}
+function loadResume(){
+  try{return JSON.parse(localStorage.getItem(RESUME_KEY))||defaultResume();}
+  catch{return defaultResume();}
+}
+function saveResume(d){
+  try{localStorage.setItem(RESUME_KEY,JSON.stringify(d));}catch{}
+}
+
+let progress = loadProgress();
+
+// ═══════════════════════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════════════════════
+
+function getAllIds(){
+  const ids=[];
+  ROADMAP.forEach(ph=>ph.weeks.forEach(w=>w.tasks.forEach(t=>ids.push(t.id))));
+  SOFT_SKILLS.forEach(s=>s.tasks.forEach(t=>ids.push(t.id)));
+  return ids;
+}
+function getTotal(){return getAllIds().length;}
+function getDone(p){return getAllIds().filter(id=>p[id]).length;}
+function getPhaseStats(phase,p){
+  const ids=[];
+  phase.weeks.forEach(w=>w.tasks.forEach(t=>ids.push(t.id)));
+  const done=ids.filter(id=>p[id]).length;
+  return{done,total:ids.length,pct:ids.length?Math.round(done/ids.length*100):0};
+}
+function getWeekStats(week,p){
+  const done=week.tasks.filter(t=>p[t.id]).length;
+  return{done,total:week.tasks.length,pct:week.tasks.length?Math.round(done/week.tasks.length*100):0};
+}
+
+function svgRing(pct,color,size,strokeW,fontSize){
+  const r=(size-strokeW*2)/2;
+  const circ=2*Math.PI*r;
+  const dash=(pct/100)*circ;
+  return `<svg width="${size}" height="${size}" style="display:block">
+    <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="#21262d" stroke-width="${strokeW}"/>
+    <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${color}" stroke-width="${strokeW}"
+      stroke-dasharray="${dash} ${circ}" stroke-linecap="round"
+      transform="rotate(-90 ${size/2} ${size/2})"
+      style="transition:stroke-dasharray .5s ease"/>
+  </svg>`;
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// QUOTE
+// ═══════════════════════════════════════════════════════════════════════
+
+(function(){
+  const q=QUOTES[Math.floor(Math.random()*QUOTES.length)];
+  document.getElementById('quote-text').textContent=`"${q.text}"`;
+  document.getElementById('quote-author').textContent=`— ${q.author}`;
+})();
+
+// ═══════════════════════════════════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════════════════════════════════
+
+document.querySelectorAll('.nav-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════════
+// PROGRESS UI
+// ═══════════════════════════════════════════════════════════════════════
+
+function updateOverallProgress(){
+  const total=getTotal(),done=getDone(progress);
+  const pct=total?Math.round(done/total*100):0;
+  const svg=document.getElementById('overall-ring-svg');
+  if(svg) svg.innerHTML=svgRing(pct,'#00ff88',80,5,13).replace('<svg','<svg ').replace('style="display:block"','');
+  const lbl=document.getElementById('overall-pct-label');
+  if(lbl) lbl.textContent=pct+'%';
+  const cnt=document.getElementById('overall-count-label');
+  if(cnt) cnt.textContent=`${done} / ${total} tasks completed`;
+  const bar=document.getElementById('overall-bar');
+  if(bar) bar.style.width=pct+'%';
+}
+
+function updatePhaseMiniCards(){
+  const wrap=document.getElementById('phase-cards');
+  if(!wrap)return;
+  wrap.innerHTML='';
+  ROADMAP.forEach(ph=>{
+    const stats=getPhaseStats(ph,progress);
+    const card=document.createElement('div');
+    card.className='phase-mini'+(stats.pct===100?' done':'');
+    card.style.setProperty('--phasecolor',ph.color);
+    card.innerHTML=`
+      <div class="phase-mini-label" style="color:${ph.color}">${ph.phase}</div>
+      <div class="phase-mini-title">${ph.title}</div>
+      <div class="phase-mini-pct" style="color:${ph.color}">${stats.pct}%</div>
+      <div class="phase-mini-count">${stats.done}/${stats.total}</div>`;
+    wrap.appendChild(card);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// TASK TOGGLE
+// ═══════════════════════════════════════════════════════════════════════
+
+function toggleTask(id){
+  progress[id]=!progress[id];
+  saveProgress(progress);
+  // update task item
+  const el=document.querySelector(`.task-item[data-id="${id}"]`);
+  if(el){
+    el.classList.toggle('done',!!progress[id]);
+  }
+  // update all week progress bars
+  ROADMAP.forEach((ph,pi)=>{
+    ph.weeks.forEach((wk,wi)=>{
+      const stats=getWeekStats(wk,progress);
+      const bar=document.getElementById(`wbar-${pi}-${wi}`);
+      if(bar) bar.style.width=stats.pct+'%';
+      const cnt=document.getElementById(`wcnt-${pi}-${wi}`);
+      if(cnt){
+        cnt.textContent=`${stats.done}/${stats.total}`;
+        cnt.style.color=stats.pct===100?'var(--green)':'var(--sub)';
+      }
+    });
+    const ps=getPhaseStats(ph,progress);
+    const pring=document.getElementById(`pring-${pi}`);
+    if(pring) pring.innerHTML=svgRing(ps.pct,ph.color,52,4,10).replace('<svg','<svg ').replace('style="display:block"','');
+    const prlbl=document.getElementById(`prlbl-${pi}`);
+    if(prlbl){prlbl.textContent=ps.pct+'%';prlbl.style.color=ph.color;}
+    const pcnt=document.getElementById(`pcnt-${pi}`);
+    if(pcnt){pcnt.textContent=`${ps.done}/${ps.total}`;pcnt.style.color=ps.pct===100?'var(--green)':'var(--sub)';}
+    // mini card
+    const mini=document.querySelectorAll('.phase-mini')[pi];
+    if(mini){
+      mini.querySelector('.phase-mini-pct').textContent=ps.pct+'%';
+      mini.querySelector('.phase-mini-count').textContent=`${ps.done}/${ps.total}`;
+      mini.classList.toggle('done',ps.pct===100);
+    }
+  });
+  // soft skills
+  SOFT_SKILLS.forEach((s,si)=>{
+    const hasSS=s.tasks.some(t=>t.id===id);
+    if(hasSS){/* already updated via DOM */}
+  });
+  updateOverallProgress();
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// BUILD ROADMAP
+// ═══════════════════════════════════════════════════════════════════════
+
+function buildTaskItem(task){
+  const done=!!progress[task.id];
+  const div=document.createElement('div');
+  div.className='task-item'+(done?' done':'');
+  div.dataset.id=task.id;
+  div.innerHTML=`
+    <div class="task-checkbox"><span class="task-checkbox-tick">✓</span></div>
+    <span class="task-text">${task.text}</span>`;
+  div.addEventListener('click',()=>toggleTask(task.id));
+  return div;
+}
+
+function buildWeekBlock(week,pi,wi,phaseColor){
+  const stats=getWeekStats(week,progress);
+  const block=document.createElement('div');
+  block.className='week-block';
+
+  const header=document.createElement('div');
+  header.className='week-header';
+  header.style.setProperty('--phasecolor',phaseColor);
+  header.innerHTML=`
+    <div class="week-header-left">
+      <span class="week-label" style="color:${phaseColor}">${week.week}</span>
+      <span class="week-title">${week.title}</span>
+    </div>
+    <div class="week-header-right">
+      <span class="week-count" id="wcnt-${pi}-${wi}" style="color:${stats.pct===100?'var(--green)':'var(--sub)'}">${stats.done}/${stats.total}</span>
+      <div class="week-bar-wrap"><div class="week-bar" id="wbar-${pi}-${wi}" style="width:${stats.pct}%;background:${phaseColor}"></div></div>
+      <span style="color:var(--muted);font-size:14px">▼</span>
+    </div>`;
+
+  const body=document.createElement('div');
+  body.className='week-body';
+  body.style.setProperty('--phasecolor',phaseColor);
+
+  week.tasks.forEach(task=>body.appendChild(buildTaskItem(task)));
+
+  if(week.resources&&week.resources.length){
+    const rlbl=document.createElement('div');
+    rlbl.className='resources-label';
+    rlbl.textContent='📚 Resources';
+    body.appendChild(rlbl);
+    const rrow=document.createElement('div');
+    week.resources.forEach(r=>{
+      const a=document.createElement('a');
+      a.href=r.url;a.target='_blank';a.rel='noopener noreferrer';
+      a.className='resource-link';a.textContent='↗ '+r.label;
+      rrow.appendChild(a);
+    });
+    body.appendChild(rrow);
+  }
+
+  header.addEventListener('click',()=>{
+    const open=body.classList.toggle('open');
+    header.classList.toggle('open',open);
+    header.querySelector('span:last-child').textContent=open?'▲':'▼';
+  });
+
+  block.appendChild(header);
+  block.appendChild(body);
+  return block;
+}
+
+function buildPhaseBlock(phase,pi){
+  const stats=getPhaseStats(phase,progress);
+  const block=document.createElement('div');
+  block.className='phase-block';
+
+  const header=document.createElement('div');
+  header.className='phase-header';
+  header.style.setProperty('--phasecolor',phase.color);
+  header.innerHTML=`
+    <div class="phase-header-left">
+      <div class="phase-ring-wrap">
+        <div id="pring-${pi}">${svgRing(stats.pct,phase.color,52,4,10).replace('<svg','<svg ').replace('style="display:block"','')}</div>
+        <div class="phase-ring-label" id="prlbl-${pi}" style="color:${phase.color}">${stats.pct}%</div>
+      </div>
+      <div>
+        <div class="phase-name" style="color:${phase.color}">${phase.phase}</div>
+        <div class="phase-title">${phase.title}</div>
+        <div class="phase-dur">${phase.duration}</div>
+      </div>
+    </div>
+    <div class="phase-header-right">
+      <span class="phase-count" id="pcnt-${pi}" style="color:${stats.pct===100?'var(--green)':'var(--sub)'}">${stats.done}/${stats.total}</span>
+      <span class="chevron">▼</span>
+    </div>`;
+
+  const body=document.createElement('div');
+  body.className='phase-body';
+  phase.weeks.forEach((wk,wi)=>body.appendChild(buildWeekBlock(wk,pi,wi,phase.color)));
+
+  header.addEventListener('click',()=>{
+    const open=body.classList.toggle('open');
+    header.classList.toggle('open',open);
+    header.querySelector('.chevron').textContent=open?'▲':'▼';
+  });
+
+  block.appendChild(header);
+  block.appendChild(body);
+  return block;
+}
+
+function buildRoadmap(){
+  updateOverallProgress();
+  updatePhaseMiniCards();
+  const container=document.getElementById('phases-container');
+  ROADMAP.forEach((ph,i)=>container.appendChild(buildPhaseBlock(ph,i)));
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// BUILD SOFT SKILLS
+// ═══════════════════════════════════════════════════════════════════════
+
+function buildSoftSkills(){
+  const container=document.getElementById('soft-container');
+  SOFT_SKILLS.forEach(section=>{
+    const sec=document.createElement('div');
+    sec.className='soft-section';
+    const title=document.createElement('div');
+    title.className='soft-section-title';
+    title.textContent=section.title;
+    sec.appendChild(title);
+    section.tasks.forEach(task=>sec.appendChild(buildTaskItem(task)));
+    container.appendChild(sec);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// RESUME BUILDER
+// ═══════════════════════════════════════════════════════════════════════
+
+function defaultResume(){
+  return {
+    name:'',role:'Software Developer',phone:'',email:'',linkedin:'',github:'',location:'',
+    summary:'',
+    skills:{languages:'',frameworks:'',databases:'',tools:''},
+    projects:[
+      {name:'',tech:'',live:'',github:'',points:['','']},
+      {name:'',tech:'',live:'',github:'',points:['','']},
+    ],
+    experience:[{role:'',company:'',duration:'',points:['','']}],
+    education:[{degree:'',college:'',year:'',cgpa:''}],
+    achievements:[''],
+  };
+}
+
+let resumeData=loadResume();
+let resumeTab='form';
+
+function saveAndRefresh(){
+  saveResume(resumeData);
+  if(resumeTab==='preview') renderPreview();
+}
+
+function field(label,key,placeholder,isTextarea){
+  const wrap=document.createElement('div');
+  wrap.className='field-wrap';
+  const lbl=document.createElement('label');
+  lbl.className='field-label';lbl.textContent=label;
+  const el=document.createElement(isTextarea?'textarea':'input');
+  el.className=isTextarea?'field-textarea':'field-input';
+  el.placeholder=placeholder||'';
+  el.rows=isTextarea?4:undefined;
+  // get nested value
+  const keys=key.split('.');
+  let val=resumeData;
+  keys.forEach(k=>val=val?.[k]);
+  el.value=val||'';
+  el.addEventListener('input',()=>{
+    let obj=resumeData;
+    keys.slice(0,-1).forEach(k=>obj=obj[k]);
+    obj[keys[keys.length-1]]=el.value;
+    saveAndRefresh();
+  });
+  wrap.appendChild(lbl);wrap.appendChild(el);
+  return wrap;
+}
+
+function sectionLabel(text){
+  const d=document.createElement('div');
+  d.className='form-section-label';d.textContent=text;return d;
+}
+
+function pointInputs(arr,onUpdate,addLabel){
+  const wrap=document.createElement('div');
+  const pLabel=document.createElement('div');
+  pLabel.className='points-label';pLabel.textContent='BULLET POINTS (use action verbs, add numbers)';
+  wrap.appendChild(pLabel);
+  function renderPoints(){
+    // clear old point inputs
+    Array.from(wrap.querySelectorAll('.point-input')).forEach(el=>el.remove());
+    const addBtn=wrap.querySelector('.add-btn');
+    arr.forEach((pt,j)=>{
+      const inp=document.createElement('input');
+      inp.className='point-input';inp.value=pt;
+      inp.placeholder='• Built REST API handling 500+ student submissions daily';
+      inp.addEventListener('input',()=>{arr[j]=inp.value;onUpdate();});
+      wrap.insertBefore(inp,addBtn);
+    });
+  }
+  const addBtn=document.createElement('button');
+  addBtn.className='add-btn';addBtn.textContent='+ Add point';
+  addBtn.addEventListener('click',()=>{arr.push('');onUpdate();renderPoints();});
+  wrap.appendChild(addBtn);
+  renderPoints();
+  return wrap;
+}
+
+function buildResumeForm(){
+  const wrap=document.getElementById('resume-form-wrap');
+  wrap.innerHTML='';
+  const grid=document.createElement('div');
+  grid.className='resume-form';
+
+  // LEFT COLUMN
+  const left=document.createElement('div');
+  left.appendChild(sectionLabel('Personal Info'));
+  left.appendChild(field('Full Name','name','Gautham R'));
+  left.appendChild(field('Target Role','role','Software Developer'));
+  left.appendChild(field('Phone','phone','+91 XXXXX XXXXX'));
+  left.appendChild(field('Email','email','yourname@gmail.com'));
+  left.appendChild(field('LinkedIn URL','linkedin','linkedin.com/in/yourname'));
+  left.appendChild(field('GitHub URL','github','github.com/GTHM'));
+  left.appendChild(field('Location','location','Kerala, India'));
+  left.appendChild(sectionLabel('Summary (2–3 lines max)'));
+  left.appendChild(field('Summary','summary','Final-year CSE student at CEK with hands-on experience in full-stack development (React, Node.js, MySQL). Built and deployed production-ready applications.',true));
+  left.appendChild(sectionLabel('Technical Skills'));
+  left.appendChild(field('Languages','skills.languages','JavaScript, Java, Python, C'));
+  left.appendChild(field('Frameworks & Libraries','skills.frameworks','React.js, Node.js, Express.js'));
+  left.appendChild(field('Databases','skills.databases','MySQL, MongoDB'));
+  left.appendChild(field('Tools & Platforms','skills.tools','Git, GitHub, VS Code, Postman, Netlify, Render'));
+  left.appendChild(sectionLabel('Education'));
+  resumeData.education.forEach((e,i)=>{
+    const card=document.createElement('div');card.className='sub-card';
+    function mkField(lbl,key2,ph){
+      const fw=document.createElement('div');fw.className='field-wrap';
+      const lb=document.createElement('label');lb.className='field-label';lb.textContent=lbl;
+      const inp=document.createElement('input');inp.className='field-input';
+      inp.placeholder=ph;inp.value=resumeData.education[i][key2]||'';
+      inp.addEventListener('input',()=>{resumeData.education[i][key2]=inp.value;saveAndRefresh();});
+      fw.appendChild(lb);fw.appendChild(inp);return fw;
+    }
+    card.appendChild(mkField('Degree / Course','degree','B.Tech Computer Science and Engineering'));
+    card.appendChild(mkField('College','college','College of Engineering Kottarakkara (KTU)'));
+    card.appendChild(mkField('Year','year','2023 – 2027'));
+    card.appendChild(mkField('CGPA','cgpa','8.5'));
+    left.appendChild(card);
+  });
+
+  // RIGHT COLUMN
+  const right=document.createElement('div');
+  right.appendChild(sectionLabel('Projects'));
+  resumeData.projects.forEach((p,i)=>{
+    const card=document.createElement('div');card.className='sub-card';
+    const slbl=document.createElement('div');slbl.className='sub-card-label';slbl.textContent=`Project ${i+1}`;
+    card.appendChild(slbl);
+    function mkField(lbl,key2,ph){
+      const fw=document.createElement('div');fw.className='field-wrap';
+      const lb=document.createElement('label');lb.className='field-label';lb.textContent=lbl;
+      const inp=document.createElement('input');inp.className='field-input';
+      inp.placeholder=ph;inp.value=resumeData.projects[i][key2]||'';
+      inp.addEventListener('input',()=>{resumeData.projects[i][key2]=inp.value;saveAndRefresh();});
+      fw.appendChild(lb);fw.appendChild(inp);return fw;
+    }
+    card.appendChild(mkField('Project Name','name','CodeSphere — Automated Lab Evaluator'));
+    card.appendChild(mkField('Tech Stack','tech','React, Node.js, MySQL, PHP'));
+    card.appendChild(mkField('Live URL','live','yourproject.netlify.app'));
+    card.appendChild(mkField('GitHub URL','github','github.com/GTHM/projectname'));
+    card.appendChild(pointInputs(resumeData.projects[i].points,saveAndRefresh));
+    right.appendChild(card);
+  });
+
+  right.appendChild(sectionLabel('Experience'));
+  resumeData.experience.forEach((e,i)=>{
+    const card=document.createElement('div');card.className='sub-card';
+    function mkField(lbl,key2,ph){
+      const fw=document.createElement('div');fw.className='field-wrap';
+      const lb=document.createElement('label');lb.className='field-label';lb.textContent=lbl;
+      const inp=document.createElement('input');inp.className='field-input';
+      inp.placeholder=ph;inp.value=resumeData.experience[i][key2]||'';
+      inp.addEventListener('input',()=>{resumeData.experience[i][key2]=inp.value;saveAndRefresh();});
+      fw.appendChild(lb);fw.appendChild(inp);return fw;
+    }
+    card.appendChild(mkField('Role','role','Trainer / Educator'));
+    card.appendChild(mkField('Company','company','Eduskhetra'));
+    card.appendChild(mkField('Duration','duration','Jan 2026 – Present'));
+    card.appendChild(pointInputs(resumeData.experience[i].points,saveAndRefresh));
+    right.appendChild(card);
+  });
+
+  right.appendChild(sectionLabel('Achievements & Activities'));
+  const achWrap=document.createElement('div');
+  function renderAchievements(){
+    Array.from(achWrap.querySelectorAll('.field-input')).forEach(el=>el.remove());
+    const addBtn=achWrap.querySelector('.add-btn');
+    resumeData.achievements.forEach((a,i)=>{
+      const inp=document.createElement('input');inp.className='field-input';
+      inp.style.marginBottom='8px';
+      inp.placeholder='NSS Secretary, CEK Unit 333 — organized 10+ community events';
+      inp.value=a;
+      inp.addEventListener('input',()=>{resumeData.achievements[i]=inp.value;saveAndRefresh();});
+      achWrap.insertBefore(inp,addBtn);
+    });
+  }
+  const achAddBtn=document.createElement('button');
+  achAddBtn.className='add-btn';achAddBtn.style.marginTop='4px';achAddBtn.textContent='+ Add achievement';
+  achAddBtn.addEventListener('click',()=>{resumeData.achievements.push('');saveAndRefresh();renderAchievements();});
+  achWrap.appendChild(achAddBtn);
+  renderAchievements();
+  right.appendChild(achWrap);
+
+  grid.appendChild(left);
+  grid.appendChild(right);
+  wrap.appendChild(grid);
+}
+
+function renderPreview(){
+  const r=resumeData;
+  const p=document.getElementById('resume-preview');
+  if(!p)return;
+  const contacts=[
+    r.phone?`📞 ${r.phone}`:'',
+    r.email?`✉ ${r.email}`:'',
+    r.location?`📍 ${r.location}`:'',
+    r.linkedin?`in ${r.linkedin}`:'',
+    r.github?`⌥ ${r.github}`:'',
+  ].filter(Boolean).map(c=>`<span>${c}</span>`).join('');
+
+  const skillsRows=[
+    r.skills.languages?`<tr><td>Languages</td><td>${esc(r.skills.languages)}</td></tr>`:'',
+    r.skills.frameworks?`<tr><td>Frameworks</td><td>${esc(r.skills.frameworks)}</td></tr>`:'',
+    r.skills.databases?`<tr><td>Databases</td><td>${esc(r.skills.databases)}</td></tr>`:'',
+    r.skills.tools?`<tr><td>Tools</td><td>${esc(r.skills.tools)}</td></tr>`:'',
+  ].filter(Boolean).join('');
+
+  const projects=r.projects.filter(p=>p.name).map(p=>`
+    <div style="margin-bottom:8px">
+      <div class="rv-proj-header">
+        <span class="rv-proj-name">${esc(p.name)}</span>
+        <span class="rv-proj-tech">${esc(p.tech)}</span>
+      </div>
+      ${(p.live||p.github)?`<div class="rv-proj-links">${p.live?`Live: ${esc(p.live)}&nbsp;&nbsp;`:''} ${p.github?`GitHub: ${esc(p.github)}`:''}</div>`:''}
+      <ul class="rv-ul">${p.points.filter(pt=>pt).map(pt=>`<li>${esc(pt)}</li>`).join('')}</ul>
+    </div>`).join('');
+
+  const experience=r.experience.filter(e=>e.role).map(e=>`
+    <div style="margin-bottom:7px">
+      <div class="rv-proj-header">
+        <span class="rv-proj-name">${esc(e.role)} — ${esc(e.company)}</span>
+        <span class="rv-proj-tech">${esc(e.duration)}</span>
+      </div>
+      <ul class="rv-ul">${e.points.filter(pt=>pt).map(pt=>`<li>${esc(pt)}</li>`).join('')}</ul>
+    </div>`).join('');
+
+  const education=r.education.filter(e=>e.degree).map(e=>`
+    <div class="rv-edu-row">
+      <div><strong>${esc(e.degree)}</strong> — ${esc(e.college)}</div>
+      <div class="rv-edu-right"><div>${esc(e.year)}</div>${e.cgpa?`<div>CGPA: ${esc(e.cgpa)}</div>`:''}</div>
+    </div>`).join('');
+
+  const achievements=r.achievements.filter(a=>a).map(a=>`<li>${esc(a)}</li>`).join('');
+
+  p.innerHTML=`
+    <div class="rv-header">
+      <div class="rv-name">${esc(r.name)||'Your Name'}</div>
+      <div class="rv-role">${esc(r.role)}</div>
+      ${contacts?`<div class="rv-contacts">${contacts}</div>`:''}
+    </div>
+    ${r.summary?`<div class="rv-section"><div class="rv-section-title">Professional Summary</div><p style="font-size:9.5pt;color:#333;line-height:1.5">${esc(r.summary)}</p></div>`:''}
+    ${skillsRows?`<div class="rv-section"><div class="rv-section-title">Technical Skills</div><table class="rv-skills-table"><tbody>${skillsRows}</tbody></table></div>`:''}
+    ${projects?`<div class="rv-section"><div class="rv-section-title">Projects</div>${projects}</div>`:''}
+    ${experience?`<div class="rv-section"><div class="rv-section-title">Experience</div>${experience}</div>`:''}
+    ${education?`<div class="rv-section"><div class="rv-section-title">Education</div>${education}</div>`:''}
+    ${achievements?`<div class="rv-section"><div class="rv-section-title">Achievements & Activities</div><ul class="rv-ul">${achievements}</ul></div>`:''}
+  `;
+}
+
+function esc(s){
+  if(!s)return'';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function initResumeTab(){
+  buildResumeForm();
+
+  document.getElementById('btn-form').addEventListener('click',()=>{
+    resumeTab='form';
+    document.getElementById('resume-form-wrap').style.display='';
+    document.getElementById('resume-preview-wrap').style.display='none';
+    document.getElementById('btn-form').classList.add('active');
+    document.getElementById('btn-preview').classList.remove('active');
+  });
+
+  document.getElementById('btn-preview').addEventListener('click',()=>{
+    resumeTab='preview';
+    renderPreview();
+    document.getElementById('resume-form-wrap').style.display='none';
+    document.getElementById('resume-preview-wrap').style.display='flex';
+    document.getElementById('btn-preview').classList.add('active');
+    document.getElementById('btn-form').classList.remove('active');
+  });
+
+  document.getElementById('btn-download').addEventListener('click',()=>{
+    renderPreview();
+    const content=document.getElementById('resume-preview').innerHTML;
+    const w=window.open('','_blank');
+    w.document.write(`<!DOCTYPE html><html><head><title>${esc(resumeData.name)||'Resume'}</title>
+    <style>
+      *{margin:0;padding:0;box-sizing:border-box}
+      body{font-family:Georgia,serif;background:white}
+      @page{size:A4;margin:0}
+      @media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+      .rv-section{margin-bottom:10px}
+      .rv-section-title{font-family:Arial;font-weight:bold;font-size:10pt;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #ccc;margin-bottom:5px;padding-bottom:2px}
+      .rv-header{text-align:center;border-bottom:2px solid #111;padding-bottom:8px;margin-bottom:10px}
+      .rv-name{font-size:20pt;font-weight:bold;font-family:Arial;letter-spacing:1px}
+      .rv-role{font-size:10pt;color:#333;margin-top:4px}
+      .rv-contacts{font-size:9pt;color:#444;margin-top:4px;display:flex;justify-content:center;flex-wrap:wrap;gap:8px}
+      .rv-skills-table{width:100%;border-collapse:collapse;font-size:9.5pt}
+      .rv-skills-table td{padding:1px 0;color:#333}
+      .rv-skills-table td:first-child{width:28%;font-weight:bold;color:#111}
+      .rv-proj-header{display:flex;justify-content:space-between;align-items:baseline}
+      .rv-proj-name{font-weight:bold;font-family:Arial;font-size:9.5pt}
+      .rv-proj-tech{font-size:8.5pt;color:#555;font-style:italic}
+      .rv-proj-links{font-size:8.5pt;color:#555;margin-top:1px}
+      .rv-ul{margin:3px 0 0 16px;padding-left:0}
+      .rv-ul li{font-size:9pt;color:#333;margin-bottom:2px}
+      .rv-edu-row{display:flex;justify-content:space-between;margin-bottom:4px;font-size:9.5pt}
+      .rv-edu-right{text-align:right;color:#555;font-style:italic}
+      #resume-preview{background:#fff;color:#111;font-family:Georgia,serif;width:100%;padding:14mm 14mm;font-size:10.5pt;line-height:1.4;box-sizing:border-box}
+    </style></head><body>
+    <div id="resume-preview">${content}</div>
+    <script>window.onload=function(){window.print();setTimeout(()=>window.close(),1000)}<\/script>
+    </body></html>`);
+    w.document.close();
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// COMPANIES DATA
+// ═══════════════════════════════════════════════════════════════════════
+
+const COMPANIES = [
+  // ── PRIORITY ──
+  {name:"UST Global",category:"priority",badge:"priority",badgeLabel:"⭐ Priority",type:"IT Services / Product Engineering",role:"Software Engineer / Associate Developer",stack:["Java","Python","React","Node.js","MySQL"],ctc:"₹4–6 LPA",process:"Referral → Aptitude → Tech Interview → HR",portal:"https://careers.ust.com",notes:"You have a referral — use it ASAP. Kerala-based MNC with Trivandrum & Kochi offices. Strong fresher intake."},
+  {name:"Capgemini",category:"priority",badge:"priority",badgeLabel:"⭐ Priority",type:"IT Services / Consulting",role:"Associate Software Engineer",stack:["Java","Python","C++","SQL","Agile"],ctc:"₹3.8–5 LPA",process:"Game-based Assessment → Tech Test → Tech Interview → HR",portal:"https://careers.capgemini.com",notes:"Large fresher batch every year. AMCAT/CoCubes route also works. 60% aggregate required."},
+  {name:"Cognizant",category:"priority",badge:"priority",badgeLabel:"⭐ Priority",type:"IT Services",role:"GenC / GenC Elevate / Programmer Analyst Trainee",stack:["Java","Python","MEAN Stack","SQL","Testing"],ctc:"₹4–6.75 LPA",process:"COCUBES Test → Technical → HR",portal:"https://careers.cognizant.com",notes:"GenC Elevate gives higher salary band. MEAN stack (Node/Express/Angular) is a bonus for developer track."},
+  {name:"HCL Technologies",category:"priority",badge:"priority",badgeLabel:"⭐ Priority",type:"IT Services",role:"Graduate Engineer Trainee / Software Engineer",stack:["Java","C++","Python","SQL","OS Basics"],ctc:"₹3.5–4.5 LPA",process:"Written Test → Tech Interview → HR",portal:"https://hcltech.com/careers",notes:"Consistent fresher hiring. Strong Kerala presence. Apply directly on the careers portal."},
+  {name:"Infosys",category:"priority",badge:"priority",badgeLabel:"⭐ Priority",type:"IT Services",role:"Systems Engineer / Digital Specialist Engineer",stack:["Java","Python","SQL","Cloud Basics","Testing"],ctc:"₹3.6–6.25 LPA",process:"InfyTQ / Online Test → Tech Interview → HR",portal:"https://infosys.com/careers",notes:"Register on InfyTQ. DSE and Specialist Programmer tracks need stronger coding. 60%+ aggregate required."},
+  {name:"Wipro",category:"priority",badge:"priority",badgeLabel:"⭐ Priority",type:"IT Services",role:"Project Engineer / Elite NLTH",stack:["Java","Python","SQL","Aptitude","OOP"],ctc:"₹3.5–6.5 LPA",process:"NLTH Online Test → Tech Interview → HR",portal:"https://careers.wipro.com",notes:"NLTH portal is specifically for freshers. Elite track has better package. Apply early — drives fill fast."},
+  {name:"TCS",category:"priority",badge:"priority",badgeLabel:"⭐ Priority",type:"IT Services",role:"Engineer Trainee — Ninja / Digital / Prime",stack:["Java","C","Python","SQL","Aptitude (heavy)"],ctc:"₹3.36–7 LPA",process:"NQT → Tech Interview → HR",portal:"https://nextstep.tcs.com",notes:"NQT score determines your track. Higher score = better pay band. Aptitude is the main filter here."},
+  // ── MASS RECRUITERS ──
+  {name:"Accenture",category:"mass",badge:"good",badgeLabel:"✔ Good Bet",type:"IT Services / Consulting",role:"Associate Software Engineer",stack:["Java","Python","React","SQL","Cloud"],ctc:"₹4.5–8 LPA",process:"Cognitive + Tech Assessment → Communication Test → HR",portal:"https://www.accenture.com/in-en/careers",notes:"One of the biggest fresher hirers in India. Communication and cognitive test matters as much as technical."},
+  {name:"IBM India",category:"mass",badge:"good",badgeLabel:"✔ Good Bet",type:"IT Services / Product",role:"Associate Developer / Application Developer",stack:["Java","Python","Cloud (AWS/Azure)","SQL","DevOps basics"],ctc:"₹4.5–7 LPA",process:"Online Coding Test → Tech Interview → HR",portal:"https://www.ibm.com/in-en/employment",notes:"Strong product culture. Cloud knowledge (even basics) is a big plus. Good brand name on resume."},
+  {name:"Tech Mahindra",category:"mass",badge:"good",badgeLabel:"✔ Good Bet",type:"IT Services",role:"Software Engineer Trainee",stack:["Java","Python","SQL","Networking basics"],ctc:"₹3.25–4.5 LPA",process:"Aptitude Test → Tech Interview → HR",portal:"https://careers.techmahindra.com",notes:"Lower bar than TCS/Infosys but regular fresher drives. Good as a safety net or first job."},
+  {name:"Mphasis",category:"mass",badge:"good",badgeLabel:"✔ Good Bet",type:"IT Services",role:"Software Engineer",stack:["Java","Python","SQL","Agile","REST APIs"],ctc:"₹3.5–5 LPA",process:"Online Test → Technical → HR",portal:"https://www.mphasis.com/home/careers.html",notes:"Regularly posts fresher openings. Good growth track internally. Apply via Naukri and LinkedIn."},
+  {name:"LTIMindtree",category:"mass",badge:"good",badgeLabel:"✔ Good Bet",type:"IT Services",role:"Software Engineer",stack:["Java","JavaScript","SQL","OOP","Testing"],ctc:"₹4–5.5 LPA",process:"LCAT Assessment → Tech Interview → HR",portal:"https://www.ltimindtree.com/careers/",notes:"Merger of LTI and Mindtree — now a top-5 IT firm. Stable fresher intake. Apply directly or via Naukri."},
+  {name:"Hexaware",category:"mass",badge:"good",badgeLabel:"✔ Good Bet",type:"IT Services",role:"Graduate Engineer Trainee",stack:["Java","Python","SQL","Cloud basics"],ctc:"₹3.5–4.5 LPA",process:"Written Test → Tech Interview → HR",portal:"https://hexaware.com/careers/",notes:"Good culture relative to its size. Active fresher hiring in Kochi, Chennai, Pune."},
+  {name:"Persistent Systems",category:"mass",badge:"good",badgeLabel:"✔ Good Bet",type:"IT Services / Product Engineering",role:"Software Engineer Trainee",stack:["Java","JavaScript","React","Node.js","SQL"],ctc:"₹5–7 LPA",process:"Online Coding Test → Tech Interview → HR",portal:"https://www.persistent.com/careers/",notes:"Above average package for a mass recruiter. Coding test is heavier than typical IT service firms."},
+  {name:"Mindtree",category:"mass",badge:"good",badgeLabel:"✔ Good Bet",type:"IT Services",role:"Software Engineer",stack:["Java","JavaScript","Python","SQL"],ctc:"₹4–5 LPA",process:"Online Test → Tech Interview → HR",portal:"https://www.ltimindtree.com/careers/",notes:"Now part of LTIMindtree. Strong engineering-first culture. Good for fresher developers."},
+  {name:"CGI Group",category:"mass",badge:"good",badgeLabel:"✔ Good Bet",type:"IT Services / Consulting",role:"Analyst / Associate Developer",stack:["Java","Python","SQL",".NET","Agile"],ctc:"₹4–6 LPA",process:"Online Test → Tech Interview → HR",portal:"https://www.cgi.com/en/careers",notes:"Canada-based MNC with India offices. Less competitive than TCS/Infosys but good exposure."},
+  // ── KERALA BASED ──
+  {name:"IBS Software",category:"kerala",badge:"kerala",badgeLabel:"📍 Kerala",type:"Product — Aviation & Travel Tech",role:"Software Engineer / Associate Developer",stack:["Java","JavaScript","React","SQL","REST APIs"],ctc:"₹5–9 LPA",process:"Online Test → 2 Tech Rounds → HR",portal:"https://www.ibsgroup.com/careers/",notes:"Trivandrum HQ. One of Kerala's best product companies. Interview is harder but package is worth it."},
+  {name:"Qburst",category:"kerala",badge:"kerala",badgeLabel:"📍 Kerala",type:"Product Engineering Services",role:"Software Developer / Frontend Developer",stack:["React","Node.js","JavaScript","Python","AWS"],ctc:"₹4–7 LPA",process:"Online Test → Tech Interview → HR",portal:"https://qburst.com/en-us/careers/",notes:"Kochi-based. Great learning environment. Very active on LinkedIn for fresher openings."},
+  {name:"Experion Technologies",category:"kerala",badge:"kerala",badgeLabel:"📍 Kerala",type:"Product Engineering / IT Services",role:"Software Engineer",stack:["React","Node.js","Java",".NET","MySQL"],ctc:"₹4–6 LPA",process:"Written Test → Tech Interview → HR",portal:"https://experionglobal.com/careers/",notes:"Thrissur HQ. Good work culture. Regular fresher intake for web dev profiles."},
+  {name:"Tata Elxsi",category:"kerala",badge:"kerala",badgeLabel:"📍 Kerala",type:"Design & Technology",role:"Graduate Engineer Trainee",stack:["C++","Python","Embedded","Java","UI/UX"],ctc:"₹5–8 LPA",process:"Written Test → Tech + HR Rounds",portal:"https://www.tataelxsi.com/careers",notes:"Trivandrum HQ. Premium product company. Best in Kerala for engineering profiles."},
+  {name:"Fingent",category:"kerala",badge:"kerala",badgeLabel:"📍 Kerala",type:"Custom Software Development",role:"Junior Software Developer",stack:["React","Node.js","PHP","Python","MySQL"],ctc:"₹3.5–5 LPA",process:"Tech Test → Interview → HR",portal:"https://www.fingent.com/careers/",notes:"Kochi-based. Smaller company = faster growth and more ownership early in career."},
+  {name:"Speridian Technologies",category:"kerala",badge:"kerala",badgeLabel:"📍 Kerala",type:"IT Services",role:"Software Developer",stack:["Java",".NET","React","SQL"],ctc:"₹3–4.5 LPA",process:"Written Test → Tech Interview → HR",portal:"https://www.speridian.com/careers",notes:"Kochi and Trivandrum offices. Good starting company in Kerala IT ecosystem."},
+  {name:"Envestnet Yodlee",category:"kerala",badge:"kerala",badgeLabel:"📍 Kerala",type:"Fintech Product",role:"Software Engineer",stack:["Java","React","SQL","REST APIs","Microservices"],ctc:"₹5–8 LPA",process:"Coding Test → Tech Rounds → HR",portal:"https://www.yodlee.com/about-us/careers",notes:"Thiruvananthapuram office. US fintech product company. Good for backend + API profiles."},
+  {name:"Saama Technologies",category:"kerala",badge:"kerala",badgeLabel:"📍 Kerala",type:"Data & Analytics Product",role:"Software Engineer",stack:["Python","Java","SQL","React","AWS"],ctc:"₹5–7 LPA",process:"Online Test → Tech Interview → HR",portal:"https://www.saama.com/careers/",notes:"Thiruvananthapuram. Life sciences data company. Python + SQL focus is a plus."},
+  // ── PRODUCT / MID-TIER ──
+  {name:"Zoho Corporation",category:"product",badge:"product",badgeLabel:"🚀 Product",type:"Product — SaaS",role:"Member Technical Staff",stack:["Java","C","C++","Python","Data Structures"],ctc:"₹5–10 LPA",process:"Written (tough) → 2 Tech Rounds → HR",portal:"https://careers.zohocorp.com",notes:"Hardest test in this list but best product company for freshers. Focus hard on DSA + CS fundamentals."},
+  {name:"Freshworks",category:"product",badge:"product",badgeLabel:"🚀 Product",type:"Product — CRM/SaaS",role:"Software Development Engineer",stack:["Ruby on Rails","React","Java","MySQL","Redis"],ctc:"₹10–18 LPA",process:"Online Coding → 2 Tech Rounds → System Design → HR",portal:"https://www.freshworks.com/company/careers/",notes:"Chennai HQ. Elite product company. Higher bar — prep DSA well. Worth the effort for the package."},
+  {name:"Razorpay",category:"product",badge:"product",badgeLabel:"🚀 Product",type:"Fintech Product",role:"Software Development Engineer",stack:["Go","Java","React","MySQL","Kafka"],ctc:"₹12–20 LPA",process:"Coding Test → 3 Tech Rounds → HR",portal:"https://razorpay.com/jobs/",notes:"Bangalore. Higher bar. Start applying in Phase 4 only if DSA is strong."},
+  {name:"Chargebee",category:"product",badge:"product",badgeLabel:"🚀 Product",type:"SaaS — Subscription Management",role:"Software Engineer",stack:["Java","React","MySQL","REST APIs","Microservices"],ctc:"₹8–14 LPA",process:"Coding Test → 2 Tech Rounds → HR",portal:"https://www.chargebee.com/careers/",notes:"Chennai-based. Good work culture, strong engineering team. Worth applying if DSA is solid."},
+  {name:"Juspay",category:"product",badge:"product",badgeLabel:"🚀 Product",type:"Fintech — Payments",role:"Software Engineer",stack:["Haskell","Java","React","SQL","Distributed Systems"],ctc:"₹8–15 LPA",process:"Coding Test → Tech Rounds → HR",portal:"https://juspay.in/careers",notes:"Bangalore. Java/DSA gets you in despite the Haskell stack. Strong engineering culture."},
+  {name:"Moengage",category:"product",badge:"product",badgeLabel:"🚀 Product",type:"MarTech SaaS",role:"Software Engineer",stack:["Java","Python","React","MySQL","Kafka"],ctc:"₹8–13 LPA",process:"Coding Test → Tech Rounds → HR",portal:"https://www.moengage.com/careers/",notes:"Bangalore. Customer engagement platform. Good for full-stack profiles."},
+  // ── STARTUPS ──
+  {name:"Facilio",category:"startup",badge:"startup",badgeLabel:"💡 Startup",type:"PropTech SaaS",role:"Software Engineer",stack:["Java","React","Node.js","MySQL","IoT"],ctc:"₹6–10 LPA",process:"Coding Test → Tech Rounds → HR",portal:"https://facilio.com/careers/",notes:"Chennai/Kochi presence. Building FM software. Good culture, growing fast."},
+  {name:"Sprinklr",category:"startup",badge:"startup",badgeLabel:"💡 Startup",type:"Enterprise SaaS — CX Platform",role:"Software Development Engineer",stack:["Java","React","MySQL","Elasticsearch","Kafka"],ctc:"₹10–16 LPA",process:"Coding Test → Multiple Tech Rounds → HR",portal:"https://www.sprinklr.com/careers/",notes:"Hyderabad office. Higher bar but excellent package. Target for Phase 5."},
+  {name:"Yellow.ai",category:"startup",badge:"startup",badgeLabel:"💡 Startup",type:"Conversational AI SaaS",role:"Software Engineer / Frontend Developer",stack:["React","Node.js","Python","MySQL","NLP"],ctc:"₹7–12 LPA",process:"Coding Test → Tech Rounds → HR",portal:"https://yellow.ai/company/careers/",notes:"Bangalore. AI-first company. Good for full-stack + AI interest profiles."},
+  {name:"Rapido",category:"startup",badge:"startup",badgeLabel:"💡 Startup",type:"Mobility / Logistics Tech",role:"Software Engineer",stack:["Java","Go","React","MySQL","Kafka"],ctc:"₹8–14 LPA",process:"Coding Test → Tech Rounds → HR",portal:"https://rapido.bike/careers",notes:"Bangalore. Fast-growing. Good for backend-oriented profiles."},
+  {name:"Locus.sh",category:"startup",badge:"startup",badgeLabel:"💡 Startup",type:"Supply Chain / Logistics Tech",role:"Software Engineer",stack:["Java","React","Python","MySQL","Microservices"],ctc:"₹8–14 LPA",process:"Online Coding → Tech Rounds → HR",portal:"https://locus.sh/careers/",notes:"Bangalore. Logistics-focused. Good engineering culture."},
+  {name:"Unacademy",category:"startup",badge:"startup",badgeLabel:"💡 Startup",type:"EdTech Platform",role:"Software Engineer",stack:["Python","React","Django","MySQL","Redis"],ctc:"₹7–12 LPA",process:"Coding Test → Tech Rounds → HR",portal:"https://unacademy.com/careers",notes:"EdTech — your Eduskhetra experience resonates here. Bangalore HQ."},
+];
+
+// ═══════════════════════════════════════════════════════════════════════
+// BUILD COMPANIES TAB
+// ═══════════════════════════════════════════════════════════════════════
+
+function buildCompanies(){
+  const grid=document.getElementById('company-grid');
+  function render(filter){
+    grid.innerHTML='';
+    const list=filter==='all'?COMPANIES:COMPANIES.filter(c=>c.category===filter);
+    list.forEach(c=>{
+      const card=document.createElement('div');
+      card.className='company-card';
+      card.innerHTML=`
+        <div class="company-card-top">
+          <div class="company-name">${c.name}</div>
+          <span class="company-badge badge-${c.badge}">${c.badgeLabel}</span>
+        </div>
+        <div class="company-type">${c.type}</div>
+        <div style="color:var(--text2);font-size:12px;margin-bottom:8px;line-height:1.5"><strong style="color:var(--text)">Role:</strong> ${c.role}</div>
+        <div class="company-stack">${c.stack.map(s=>`<span class="stack-tag">${s}</span>`).join('')}</div>
+        <div class="company-meta"><div class="meta-item">CTC: <span>${c.ctc}</span></div></div>
+        <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--sub);margin-bottom:10px">${c.process}</div>
+        <a href="${c.portal}" target="_blank" rel="noopener noreferrer" class="company-link">↗ Apply Portal</a>
+        <div class="company-notes">${c.notes}</div>`;
+      grid.appendChild(card);
+    });
+  }
+  render('all');
+  document.querySelectorAll('.filter-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      render(btn.dataset.filter);
+    });
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════════════
+
+buildRoadmap();
+buildSoftSkills();
+buildCompanies();
+initResumeTab();
+</script>
 </body>
 </html>
